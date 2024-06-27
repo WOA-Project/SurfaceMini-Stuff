@@ -1,0 +1,67 @@
+;
+; SurfaceIntegrationDriver.inf
+;
+; Copyright (C) 2014 Microsoft Corporation.  All Rights Reserved.
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=System
+ClassGuid={4D36E97D-E325-11CE-BFC1-08002BE10318}
+Provider=%ManufacturerName%
+CatalogFile=SurfaceIntegrationDriver.cat
+DriverVer=02/19/2014,1.0.237.0
+PnpLockdown=1
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+; ================= Class section =====================
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+SurfaceIntegrationDriver.sys  = 1,,
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName%=Standard,NTARM
+
+[Standard.NTARM]
+;
+%SurfaceIntegrationDriver.DeviceDesc%=SurfaceIntegrationDriver_Device, ACPI\MSHW0021
+
+[SurfaceIntegrationDriver_Device.NT]
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+SurfaceIntegrationDriver.sys
+
+[SurfaceIntegrationDriver_Device.NT.HW]
+
+
+;-------------- Service installation
+[SurfaceIntegrationDriver_Device.NT.Services]
+;
+; %SPSVCINST_ASSOCSERVICE% should only be specificed if this is a function driver.
+;
+AddService = SurfaceIntegrationDriver,%SPSVCINST_ASSOCSERVICE%, SurfaceIntegrationDriver_Service_Inst
+
+; -------------- SurfaceIntegrationDriver driver install sections
+[SurfaceIntegrationDriver_Service_Inst]
+DisplayName    = %SurfaceIntegrationDriver.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\SurfaceIntegrationDriver.sys
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ManufacturerName="Microsoft"
+DiskName = "Surface Integration Driver Installation Disk"
+SurfaceIntegrationDriver.DeviceDesc = "Surface Integration"
+SurfaceIntegrationDriver.SVCDESC = "Surface Integration"
